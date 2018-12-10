@@ -69,26 +69,87 @@ defmodule EthereumJSONRPC.Parity.FetchedBeneficiaries do
   end
 
   defp traces_to_params_set(traces, block_number) when is_list(traces) and is_integer(block_number) do
-    Enum.reduce(traces, MapSet.new(), fn trace, acc ->
-      MapSet.union(acc, trace_to_params_set(trace, block_number))
+    traces
+    |> Stream.filter(&(&1["type"] == "reward"))
+    |> Stream.with_index()
+    |> Enum.reduce(MapSet.new(), fn {trace, index}, acc ->
+      MapSet.union(acc, trace_to_params_set(trace, block_number, index))
     end)
   end
 
-  defp trace_to_params_set(%{"action" => %{"callType" => _}, "blockNumber" => block_number}, block_number),
-    do: MapSet.new()
+  defp trace_to_params_set(
+         %{
+           "action" => %{
+             "rewardType" => reward_type,
+             "author" => address_hash_data,
+             "value" => reward_value
+           },
+           "blockNumber" => block_number
+         },
+         block_number,
+         index
+       )
+       when is_integer(block_number) and reward_type in ~w(external) do
+    address_type =
+      if index == 0 do
+        :validator
+      else
+        :emission_funds
+      end
 
-  defp trace_to_params_set(%{"type" => type, "blockNumber" => block_number}, block_number)
-       when type in ~w(create suicide),
-       do: MapSet.new()
+    MapSet.new([
+      %{
+        address_hash: address_hash_data,
+        block_number: block_number,
+        reward: reward_value,
+        address_type: address_type
+      }
+    ])
+  end
 
   defp trace_to_params_set(
          %{
-           "action" => %{"rewardType" => reward_type, "author" => address_hash_data},
+           "action" => %{
+             "rewardType" => reward_type,
+             "author" => address_hash_data,
+             "value" => reward_value
+           },
            "blockNumber" => block_number
          },
-         block_number
+         block_number,
+         _index
        )
-       when is_integer(block_number) and reward_type in ~w(block external uncle) do
-    MapSet.new([%{address_hash: address_hash_data, block_number: block_number}])
+       when is_integer(block_number) and reward_type in ~w(block) do
+    MapSet.new([
+      %{
+        address_hash: address_hash_data,
+        block_number: block_number,
+        reward: reward_value,
+        address_type: :validator
+      }
+    ])
+  end
+
+  defp trace_to_params_set(
+         %{
+           "action" => %{
+             "rewardType" => reward_type,
+             "author" => address_hash_data,
+             "value" => reward_value
+           },
+           "blockNumber" => block_number
+         },
+         block_number,
+         _index
+       )
+       when is_integer(block_number) and reward_type in ~w(uncle) do
+    MapSet.new([
+      %{
+        address_hash: address_hash_data,
+        block_number: block_number,
+        reward: reward_value,
+        address_type: :uncle
+      }
+    ])
   end
 end
