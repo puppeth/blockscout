@@ -226,12 +226,7 @@ defmodule Indexer.Block.Fetcher do
           "0x" <> reward_hex = beneficiary.reward
           {reward, _} = Integer.parse(reward_hex, 16)
 
-          %{
-            address_hash: beneficiary.address_hash,
-            block_number: beneficiary.block_number,
-            reward: reward + validation_reward,
-            address_type: beneficiary.address_type
-          }
+          %{beneficiary | reward: reward + validation_reward}
 
         _ ->
           beneficiary

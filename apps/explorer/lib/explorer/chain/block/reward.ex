@@ -5,33 +5,31 @@ defmodule Explorer.Chain.Block.Reward do
 
   use Explorer.Schema
 
-  alias Explorer.Chain.Block.Reward
   alias Explorer.Chain.Block.Reward.AddressType
-  alias Explorer.Chain.Hash.Address
-  alias Explorer.Chain.{Block, Wei}
+  alias Explorer.Chain.{Hash, Wei}
 
-  @required_attrs ~w(address_hash address_type block_number reward)a
+  @required_attrs ~w(address_hash address_type block_hash reward)a
 
   @typedoc """
   The validation reward given related to a block.
 
   * `:address_hash` - Hash of address who received the reward
   * `:address_type` - Type of the address_hash, either emission_funds, uncle or validator
-  * `:block_number` - Number of the block validation
+  * `:block_hash` - Hash of the validated block
   * `:reward` - Total block reward
   """
-  @type t :: %Reward{
-          address_hash: Address.t(),
+  @type t :: %__MODULE__{
+          address_hash: Hash.Address.t(),
           address_type: AddressType.t(),
-          block_number: Block.block_number(),
+          block_hash: Hash.Full.t(),
           reward: Wei.t()
         }
 
   @primary_key false
   schema "block_rewards" do
-    field(:address_hash, Address)
+    field(:address_hash, Hash.Address)
     field(:address_type, AddressType)
-    field(:block_number, :integer)
+    field(:block_hash, Hash.Full)
     field(:reward, Wei)
 
     timestamps()

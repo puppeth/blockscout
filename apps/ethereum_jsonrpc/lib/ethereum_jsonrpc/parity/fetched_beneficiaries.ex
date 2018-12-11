@@ -84,6 +84,7 @@ defmodule EthereumJSONRPC.Parity.FetchedBeneficiaries do
              "author" => address_hash_data,
              "value" => reward_value
            },
+           "blockHash" => block_hash,
            "blockNumber" => block_number
          },
          block_number,
@@ -100,6 +101,7 @@ defmodule EthereumJSONRPC.Parity.FetchedBeneficiaries do
     MapSet.new([
       %{
         address_hash: address_hash_data,
+        block_hash: block_hash,
         block_number: block_number,
         reward: reward_value,
         address_type: address_type
@@ -114,7 +116,8 @@ defmodule EthereumJSONRPC.Parity.FetchedBeneficiaries do
              "author" => address_hash_data,
              "value" => reward_value
            },
-           "blockNumber" => block_number
+           "blockNumber" => block_number,
+           "blockHash" => block_hash
          },
          block_number,
          _index
@@ -124,6 +127,7 @@ defmodule EthereumJSONRPC.Parity.FetchedBeneficiaries do
       %{
         address_hash: address_hash_data,
         block_number: block_number,
+        block_hash: block_hash,
         reward: reward_value,
         address_type: :validator
       }
@@ -137,7 +141,8 @@ defmodule EthereumJSONRPC.Parity.FetchedBeneficiaries do
              "author" => address_hash_data,
              "value" => reward_value
            },
-           "blockNumber" => block_number
+           "blockNumber" => block_number,
+           "blockHash" => block_hash
          },
          block_number,
          _index
@@ -146,6 +151,7 @@ defmodule EthereumJSONRPC.Parity.FetchedBeneficiaries do
     MapSet.new([
       %{
         address_hash: address_hash_data,
+        block_hash: block_hash,
         block_number: block_number,
         reward: reward_value,
         address_type: :uncle
