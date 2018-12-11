@@ -8,10 +8,10 @@ defmodule EthereumJSONRPC.FetchedBeneficiary do
 
   @type params :: %{
     address_hash: EthereumJSONRPC.hash(),
-    block_number: non_neg_integer(),
+    address_type: AddressType.t(),
     block_hash: Hash.Full.t(),
-    reward: String.t(),
-    address_type: AddressType.t()
+    block_number: non_neg_integer(),
+    reward: String.t()
   }
   @type error :: %{code: integer(), message: String.t(), data: %{block_number: non_neg_integer()}}
 end
