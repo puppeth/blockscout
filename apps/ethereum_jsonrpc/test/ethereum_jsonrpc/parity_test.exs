@@ -295,9 +295,21 @@ defmodule EthereumJSONRPC.ParityTest do
 
       assert Enum.count(params_set) == 2
 
-      assert %{block_number: block_number, block_hash: block_hash, address_hash: hash2, address_type: :validator, reward: "0xde0b6b3a7640000"} in params_set
+      assert %{
+               block_number: block_number,
+               block_hash: block_hash,
+               address_hash: hash2,
+               address_type: :validator,
+               reward: "0xde0b6b3a7640000"
+             } in params_set
 
-      assert %{block_number: block_number, block_hash: block_hash, address_hash: hash1, address_type: :validator, reward: "0xde0b6b3a7640000"} in params_set
+      assert %{
+               block_number: block_number,
+               block_hash: block_hash,
+               address_hash: hash1,
+               address_type: :validator,
+               reward: "0xde0b6b3a7640000"
+             } in params_set
     end
 
     test "with 'external' 'rewardType'", %{
@@ -357,7 +369,13 @@ defmodule EthereumJSONRPC.ParityTest do
 
       assert Enum.count(params_set) == 2
 
-      assert %{block_number: block_number, block_hash: block_hash, address_hash: hash1, address_type: :validator, reward: "0xde0b6b3a7640000"} in params_set
+      assert %{
+               block_number: block_number,
+               block_hash: block_hash,
+               address_hash: hash1,
+               address_type: :validator,
+               reward: "0xde0b6b3a7640000"
+             } in params_set
 
       assert %{
                block_number: block_number,
@@ -459,9 +477,21 @@ defmodule EthereumJSONRPC.ParityTest do
 
       assert Enum.count(params_set) == 2
 
-      assert %{block_number: block_number, block_hash: block_hash, address_hash: hash2, address_type: :validator, reward: "0xde0b6b3a7640000"} in params_set
+      assert %{
+               block_number: block_number,
+               block_hash: block_hash,
+               address_hash: hash2,
+               address_type: :validator,
+               reward: "0xde0b6b3a7640000"
+             } in params_set
 
-      assert %{block_number: block_number, block_hash: block_hash, address_hash: hash1, address_type: :validator, reward: "0xde0b6b3a7640000"} in params_set
+      assert %{
+               block_number: block_number,
+               block_hash: block_hash,
+               address_hash: hash1,
+               address_type: :validator,
+               reward: "0xde0b6b3a7640000"
+             } in params_set
     end
 
     test "with multiple blocks with repeat beneficiaries", %{
