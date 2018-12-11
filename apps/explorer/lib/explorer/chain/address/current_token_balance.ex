@@ -5,7 +5,7 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
 
   use Ecto.Schema
   import Ecto.Changeset
-  import Ecto.Query, only: [from: 2, limit: 2, order_by: 3, preload: 2, subquery: 1, where: 3]
+  import Ecto.Query, only: [from: 2, limit: 2, order_by: 3, preload: 2, where: 3]
 
   alias Explorer.{Chain, PagingOptions}
   alias Explorer.Chain.{Address, Block, Hash, Token}
@@ -91,15 +91,13 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
   Builds an `Ecto.Query` to fetch the current token balances of the given address.
   """
   def last_token_balances(address_hash) do
-    query =
-      from(
-        tb in __MODULE__,
-        where: tb.address_hash == ^address_hash,
-        where: tb.value > 0,
-        order_by: [desc: :block_number]
-      )
-
-    from(tb in subquery(query), preload: :token)
+    from(
+      tb in __MODULE__,
+      where: tb.address_hash == ^address_hash,
+      where: tb.value > 0,
+      order_by: [desc: :block_number],
+      preload: :token
+    )
   end
 
   defp token_holders_query(token_contract_address_hash) do
