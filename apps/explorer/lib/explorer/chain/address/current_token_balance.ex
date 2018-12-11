@@ -95,7 +95,6 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
       tb in __MODULE__,
       where: tb.address_hash == ^address_hash,
       where: tb.value > 0,
-      order_by: [desc: :block_number],
       preload: :token
     )
   end
