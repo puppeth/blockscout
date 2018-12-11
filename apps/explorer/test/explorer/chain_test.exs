@@ -2893,38 +2893,6 @@ defmodule Explorer.ChainTest do
 
       assert token_balances == [current_token_balance.address_hash]
     end
-
-    test "returns an empty list when there are no token balances" do
-      address = insert(:address)
-
-      insert(:address_current_token_balance, address: build(:address))
-
-      assert Chain.fetch_last_token_balances(address.hash) == []
-    end
-
-    test "does not consider tokens that have value 0" do
-      address = insert(:address)
-
-      current_token_balance_a =
-        insert(
-          :address_current_token_balance,
-          address: address,
-          value: 5000
-        )
-
-      insert(
-        :address_current_token_balance,
-        address: address,
-        value: 0
-      )
-
-      token_balances =
-        address.hash
-        |> Chain.fetch_last_token_balances()
-        |> Enum.map(& &1.address_hash)
-
-      assert token_balances == [current_token_balance_a.address_hash]
-    end
   end
 
   describe "fetch_token_holders_from_token_hash/2" do
