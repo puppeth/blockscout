@@ -90,72 +90,20 @@ defmodule EthereumJSONRPC.Parity.FetchedBeneficiaries do
          block_number,
          index
        )
-       when is_integer(block_number) and reward_type in ~w(external) do
-    address_type =
-      if index == 0 do
-        :validator
-      else
-        :emission_funds
-      end
-
+       when is_integer(block_number) and reward_type in ~w(block external uncle) do
     MapSet.new([
       %{
         address_hash: address_hash_data,
         block_hash: block_hash,
         block_number: block_number,
         reward: reward_value,
-        address_type: address_type
+        address_type: get_address_type(reward_type, index)
       }
     ])
   end
 
-  defp trace_to_params_set(
-         %{
-           "action" => %{
-             "rewardType" => reward_type,
-             "author" => address_hash_data,
-             "value" => reward_value
-           },
-           "blockNumber" => block_number,
-           "blockHash" => block_hash
-         },
-         block_number,
-         _index
-       )
-       when is_integer(block_number) and reward_type in ~w(block) do
-    MapSet.new([
-      %{
-        address_hash: address_hash_data,
-        block_number: block_number,
-        block_hash: block_hash,
-        reward: reward_value,
-        address_type: :validator
-      }
-    ])
-  end
-
-  defp trace_to_params_set(
-         %{
-           "action" => %{
-             "rewardType" => reward_type,
-             "author" => address_hash_data,
-             "value" => reward_value
-           },
-           "blockNumber" => block_number,
-           "blockHash" => block_hash
-         },
-         block_number,
-         _index
-       )
-       when is_integer(block_number) and reward_type in ~w(uncle) do
-    MapSet.new([
-      %{
-        address_hash: address_hash_data,
-        block_hash: block_hash,
-        block_number: block_number,
-        reward: reward_value,
-        address_type: :uncle
-      }
-    ])
-  end
+  defp get_address_type(reward_type, index) when reward_type == "external" and index == 0, do: :validator
+  defp get_address_type(reward_type, index) when reward_type == "external" and index == 1, do: :emission_funds
+  defp get_address_type(reward_type, _index) when reward_type == "block", do: :validator
+  defp get_address_type(reward_type, _index) when reward_type == "uncle", do: :uncle
 end
